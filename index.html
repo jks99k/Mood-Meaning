@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood & Meaning — 문장 감성 분석 서비스</title>
+  <meta name="description" content="사용자가 입력한 문장의 전반적인 감정을 AI가 긍정, 부정, 중립으로 정밀 분석하고 신뢰도와 근거를 제공합니다.">
+  
+  <!-- 스타일시트 연결 -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- 1. 상단 내비게이션 헤더 -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="/" class="brand-logo" aria-label="Mood and Meaning 홈">
+        <span class="logo-text">Mood &amp; Meaning</span>
+      </a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="#about" class="nav-link">서비스 소개</a>
+        <a href="#analyzer" class="nav-btn">문장 분석하기</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 체크 패턴 구분선 -->
+  <div class="check-pattern-divider" aria-hidden="true"></div>
+
+  <main>
+    <!-- 2. 히어로 소개 섹션 -->
+    <section class="hero-section" id="intro">
+      <div class="container hero-container">
+        <div class="hero-badge">EDITORIAL SENTIMENT ANALYZER</div>
+        <h1 class="hero-title">Words have a feeling.</h1>
+        <p class="hero-subtitle">
+          한 문장에 담긴 미묘한 마음의 온도를 가볍게 들여다보세요.<br>
+          AI가 문장을 읽고 긍정, 부정, 중립의 감정과 신뢰도, 그리고 분석 근거를 안내합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. 문장 분석 입력 및 결과 패널 섹션 -->
+    <section class="analyzer-section" id="analyzer">
+      <div class="container analyzer-container">
+        
+        <!-- 입력 폼 카드 -->
+        <div class="panel-card input-card">
+          <div class="card-header">
+            <span class="card-tag">INPUT TEXT</span>
+            <h2 class="card-title">분석할 문장 작성</h2>
+          </div>
+
+          <form id="sentiment-form" class="sentiment-form" novalidate>
+            <div class="form-group">
+              <label for="text-input" class="form-label">
+                오늘 경험한 일이나 누군가에게 전하고 싶은 문장을 입력하세요:
+              </label>
+              <textarea
+                id="text-input"
+                name="text"
+                class="text-input"
+                rows="6"
+                maxlength="2000"
+                placeholder="예: 오늘 발표가 긴장되었지만 동료들의 응원 덕분에 무사히 잘 마칠 수 있어서 정말 뿌듯했다."
+                aria-describedby="char-count input-notice error-message"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-meta">
+              <!-- 글자 수 표시 (0 / 2,000자) -->
+              <div id="char-count" class="char-count" aria-live="polite">
+                <span id="current-chars">0</span> / 2,000자
+              </div>
+              
+              <!-- 제출 버튼 -->
+              <button type="submit" id="submit-btn" class="submit-btn">
+                <span class="btn-text">감성 분석 시작</span>
+                <span class="btn-spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <!-- 입력 관련 에러 메시지 노출 영역 -->
+            <div id="error-message" class="error-message" role="alert" aria-live="assertive" hidden></div>
+
+            <!-- 개인정보 및 AI 안내 문구 -->
+            <p id="input-notice" class="input-notice">
+              ※ 입력하신 문장은 AI 분석을 위해 안전하게 전송되며 분석 품질 향상을 위해 DB에 저장될 수 있습니다. 주민등록번호, 비밀번호 등 민감한 개인정보는 입력하지 마세요.
+            </p>
+          </form>
+        </div>
+
+        <!-- 결과 카드 (초기에는 숨김 상태) -->
+        <div id="result-card" class="panel-card result-card" aria-live="polite" hidden>
+          <div class="card-header">
+            <span class="card-tag">ANALYSIS RESULT</span>
+            <h2 class="card-title">감성 분석 결과</h2>
+          </div>
+
+          <div class="result-body">
+            <!-- 감정 라벨 및 배지 -->
+            <div class="sentiment-badge-wrap">
+              <span class="sentiment-caption">판별된 감정</span>
+              <div id="sentiment-badge" class="sentiment-badge">
+                <span id="sentiment-icon" class="sentiment-icon" aria-hidden="true">●</span>
+                <span id="sentiment-label" class="sentiment-label">중립</span>
+              </div>
+            </div>
+
+            <!-- 신뢰도 진행 바 및 퍼센트 -->
+            <div class="confidence-wrap">
+              <div class="confidence-header">
+                <span class="confidence-title">모델 추정 신뢰도</span>
+                <span id="confidence-value" class="confidence-value">0%</span>
+              </div>
+              <div class="progress-bar-container" role="progressbar" id="progress-bar-wrap" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+              </div>
+              <p class="confidence-desc">
+                * 신뢰도는 AI 모델의 자체 확신도 추정치이며 절대적인 통계 확률이나 정답을 보장하는 것은 아닙니다.
+              </p>
+            </div>
+
+            <!-- 분석 이유 카드 -->
+            <div class="reason-wrap">
+              <span class="reason-title">분석 근거 및 이유</span>
+              <blockquote id="reason-text" class="reason-text">
+                문장을 분석하면 여기에 근거가 표시됩니다.
+              </blockquote>
+            </div>
+
+            <!-- 저장 상태 안내 문구 -->
+            <div id="save-status-wrap" class="save-status-wrap">
+              <span id="save-status-badge" class="save-status-badge">기록 저장 완료</span>
+              <span id="save-status-text" class="save-status-text">분석 결과가 데이터베이스에 안전하게 기록되었습니다.</span>
+            </div>
+
+            <!-- 참고용 안내 -->
+            <p class="result-disclaimer">
+              본 감성 분석 서비스는 문장에 나타난 어휘와 문맥에 기반한 언어적 참고 지표이며 사람의 실제 심리 상태나 의도를 단정하거나 의학적으로 진단하지 않습니다.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. 서비스 소개 및 원칙 섹션 -->
+    <section class="about-section" id="about">
+      <div class="container about-container">
+        <h2 class="about-title">About Mood &amp; Meaning</h2>
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>1. 직관적인 감정 판별</h3>
+            <p>복잡하고 난해한 수치 대신, 누구나 한눈에 이해할 수 있는 긍정, 부정, 중립의 세 가지 핵심 분류로 명쾌하게 정리합니다.</p>
+          </div>
+          <div class="about-card">
+            <h3>2. 구체적인 분석 근거</h3>
+            <p>단순한 결과 통보에 그치지 않고, AI가 왜 그러한 감정으로 판단했는지 문장 내 표현을 짚어 설명합니다.</p>
+          </div>
+          <div class="about-card">
+            <h3>3. 철저한 데이터 보안</h3>
+            <p>비밀 키는 서버에서만 안전하게 관리되며, 브라우저에 노출되지 않도록 견고한 보안 아키텍처를 준수합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 체크 패턴 하단 구분선 -->
+  <div class="check-pattern-divider" aria-hidden="true"></div>
+
+  <!-- 5. 푸터 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p class="footer-logo">Mood &amp; Meaning</p>
+      <p class="footer-text">
+        자연어 감성 분석 웹 서비스 · Vanilla JavaScript &amp; Vercel &amp; Supabase
+      </p>
+      <p class="footer-copy">&copy; Mood &amp; Meaning. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- 프론트엔드 자바스크립트 연결 -->
+  <script src="js/app.js"></script>
+</body>
+</html>
+
