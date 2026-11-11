@@ -44,21 +44,18 @@ const server = http.createServer(async (req, res) => {
 
   // 1. API 요청 처리 (/api/analyze)
   if (pathname === '/api/analyze') {
-    // Vercel Serverless Function과 호환되도록 req/res 객체 보강 (Helper 함수 부착)
     let bodyData = '';
     req.on('data', chunk => {
       bodyData += chunk;
     });
 
     req.on('end', async () => {
-      // 본문 파싱 시도
       try {
         req.body = bodyData ? JSON.parse(bodyData) : {};
       } catch (err) {
         req.body = bodyData;
       }
 
-      // res.status(code).json(payload) 헬퍼 메서드 추가
       res.status = function (statusCode) {
         res.statusCode = statusCode;
         return {
@@ -90,9 +87,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 2. 정적 웹 파일 서빙 (HTML, CSS, JS)
-  let filePath = pathname === '/' ? '/index.html' : pathname;
-  const safePath = path.normalize(path.join(__dirname, filePath));
+  // 2. 정적 웹 파일 서빙 (public 폴더 우선 확인 후 루트 확인)
+  const targetFile = pathname === '/' ? '/index.html' : pathname;
+  let safePath = path.normalize(path.join(__dirname, 'public', targetFile));
+
+  // public에 없으면 루트에서 탐색
+  if (!fs.existsSync(safePath)) {
+    safePath = path.normalize(path.join(__dirname, targetFile));
+  }
 
   // 상위 경로 탐색 방지 (Directory Traversal 취약점 차단)
   if (!safePath.startsWith(__dirname)) {
@@ -129,4 +131,3 @@ server.listen(PORT, () => {
   console.log(`👉 브라우저 주소: http://localhost:${PORT}`);
   console.log('====================================================');
 });
-

@@ -1,0 +1,644 @@
+/**
+ * css/styles.css
+ * 
+ * Mood & Meaning 감성 분석 서비스 스타일시트
+ * - 에디토리얼 매거진 감성의 대담한 타이포그래피와 따뜻한 컬러 블록 적용
+ * - 체크 패턴 구분선 (CSS 반복 선형 그라디언트)
+ * - 360px 모바일 화면부터 데스크톱까지 완벽 지원하는 반응형 디자인
+ */
+
+/* ==============================================================================
+   1. CSS 변수 및 전역 디자인 토큰
+   ============================================================================== */
+:root {
+  /* 주요 브랜드 컬러 */
+  --ink: #062A35;       /* 딥 틸 / 네이비 (메인 배경) */
+  --teal: #06465A;      /* 보조 딥 틸 */
+  --rust: #B7441D;      /* 번트 오렌지 (포인트/강조) */
+  --mustard: #F2C230;   /* 머스터드 옐로 (주요 버튼) */
+  --mustard-hover: #DDAE20;
+  --cream: #FFF4D8;     /* 따뜻한 아이보리 카드 배경 */
+  --paper: #F8F5EA;     /* 기본 본문 밝은 배경 */
+  --text-dark: #14272A; /* 어두운 본문 글자색 */
+  --text-light: #FFF9ED;/* 밝은 헤드라인 글자색 */
+  --text-muted: #556B6F;/* 보조 회색조 글자색 */
+  
+  /* 감정 상태별 색상 (절제된 톤 사용) */
+  --color-positive-bg: #E3F5E1;
+  --color-positive-text: #1B5E20;
+  --color-positive-border: #81C784;
+
+  --color-negative-bg: #FBE5E5;
+  --color-negative-text: #B71C1C;
+  --color-negative-border: #E57373;
+
+  --color-neutral-bg: #EAEFF2;
+  --color-neutral-text: #263238;
+  --color-neutral-border: #90A4AE;
+
+  /* 글꼴 체계 */
+  --font-serif: "Georgia", "Times New Roman", "Batang", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+
+  /* 그림자 및 둥글기 */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-card: 0 12px 32px rgba(6, 42, 53, 0.25);
+  --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ==============================================================================
+   2. 기본 리셋 및 전역 스타일
+   ============================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--ink);
+  color: var(--text-light);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+/* 컨테이너 (중앙 정렬 및 여백 확보) */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* 키보드 접근성 포커스 표시 */
+*:focus-visible {
+  outline: 3px solid var(--mustard);
+  outline-offset: 3px;
+}
+
+/* ==============================================================================
+   3. 체크 패턴 구분선 (CSS Gradient)
+   ============================================================================== */
+.check-pattern-divider {
+  width: 100%;
+  height: 16px;
+  background-color: var(--rust);
+  background-image: 
+    repeating-linear-gradient(45deg, var(--mustard) 25%, transparent 25%, transparent 75%, var(--mustard) 75%, var(--mustard)),
+    repeating-linear-gradient(45deg, var(--mustard) 25%, var(--rust) 25%, var(--rust) 75%, var(--mustard) 75%, var(--mustard));
+  background-position: 0 0, 8px 8px;
+  background-size: 16px 16px;
+  opacity: 0.9;
+}
+
+/* ==============================================================================
+   4. 상단 헤더
+   ============================================================================== */
+.site-header {
+  background-color: var(--ink);
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(255, 244, 216, 0.1);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand-logo {
+  text-decoration: none;
+  color: var(--text-light);
+}
+
+.logo-text {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--cream);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: var(--cream);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+
+.nav-link:hover {
+  opacity: 0.8;
+}
+
+.nav-btn {
+  background-color: var(--mustard);
+  color: var(--text-dark);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.nav-btn:hover {
+  background-color: var(--mustard-hover);
+  transform: translateY(-1px);
+}
+
+/* ==============================================================================
+   5. 히어로 섹션
+   ============================================================================== */
+.hero-section {
+  padding: 3.5rem 0 2rem;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--mustard);
+  border: 1px solid var(--mustard);
+  padding: 0.35rem 0.9rem;
+  border-radius: 50px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cream);
+  margin-bottom: 1.25rem;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: rgba(255, 244, 216, 0.85);
+  max-width: 650px;
+  margin: 0 auto;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* ==============================================================================
+   6. 분석기 카드 (입력 및 결과)
+   ============================================================================== */
+.analyzer-section {
+  padding: 1.5rem 0 4rem;
+}
+
+.analyzer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.panel-card {
+  background-color: var(--paper);
+  color: var(--text-dark);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem;
+  box-shadow: var(--shadow-card);
+  border: 2px solid var(--cream);
+}
+
+.card-header {
+  border-bottom: 2px solid rgba(20, 39, 42, 0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--rust);
+  margin-bottom: 0.25rem;
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* 입력 폼 */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.text-input {
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-dark);
+  background-color: #FFFFFF;
+  border: 2px solid #D8D2C2;
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.text-input:focus {
+  border-color: var(--rust);
+  box-shadow: 0 0 0 4px rgba(183, 68, 29, 0.15);
+  outline: none;
+}
+
+.form-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.char-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.char-count.limit-warning {
+  color: var(--rust);
+}
+
+/* 버튼 */
+.submit-btn {
+  background-color: var(--mustard);
+  color: var(--text-dark);
+  border: 2px solid var(--text-dark);
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--mustard-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 로딩 스피너 */
+.btn-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(20, 39, 42, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--text-dark);
+  animation: spin 0.8s linear infinite;
+}
+
+.submit-btn.is-loading .btn-spinner {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 에러 메시지 */
+.error-message {
+  background-color: #FEECEB;
+  color: #B71C1C;
+  border: 1px solid #F5C6CB;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.input-notice {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ==============================================================================
+   7. 결과 카드 상세 스타일
+   ============================================================================== */
+.result-card {
+  background-color: var(--cream);
+  border: 3px solid var(--ink);
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 감정 배지 */
+.sentiment-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sentiment-caption {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.sentiment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  width: fit-content;
+  border: 2px solid transparent;
+}
+
+/* 감정 상태별 색상 */
+.sentiment-badge.positive {
+  background-color: var(--color-positive-bg);
+  color: var(--color-positive-text);
+  border-color: var(--color-positive-border);
+}
+
+.sentiment-badge.negative {
+  background-color: var(--color-negative-bg);
+  color: var(--color-negative-text);
+  border-color: var(--color-negative-border);
+}
+
+.sentiment-badge.neutral {
+  background-color: var(--color-neutral-bg);
+  color: var(--color-neutral-text);
+  border-color: var(--color-neutral-border);
+}
+
+/* 신뢰도 */
+.confidence-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.confidence-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.confidence-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.confidence-value {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--rust);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 12px;
+  background-color: #E2DCC8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background-color: var(--rust);
+  border-radius: 10px;
+  transition: width 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.confidence-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* 분석 이유 인용 카드 */
+.reason-wrap {
+  background-color: #FFFFFF;
+  border-left: 4px solid var(--ink);
+  padding: 1.2rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.reason-title {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.reason-text {
+  font-size: 1.05rem;
+  color: var(--text-dark);
+  line-height: 1.6;
+  font-style: normal;
+}
+
+/* DB 저장 상태 */
+.save-status-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(20, 39, 42, 0.2);
+}
+
+.save-status-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.save-status-badge.success {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.save-status-badge.failed {
+  background-color: #FFF3E0;
+  color: #E65100;
+}
+
+.save-status-text {
+  color: var(--text-muted);
+}
+
+.result-disclaimer {
+  font-size: 0.8rem;
+  color: #718284;
+  line-height: 1.4;
+}
+
+/* ==============================================================================
+   8. 소개 섹션
+   ============================================================================== */
+.about-section {
+  padding: 3.5rem 0;
+  background-color: var(--teal);
+}
+
+.about-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--cream);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.about-card {
+  background-color: rgba(255, 244, 216, 0.08);
+  border: 1px solid rgba(255, 244, 216, 0.15);
+  border-radius: var(--radius-md);
+  padding: 1.8rem;
+}
+
+.about-card h3 {
+  font-size: 1.15rem;
+  color: var(--mustard);
+  margin-bottom: 0.75rem;
+}
+
+.about-card p {
+  font-size: 0.95rem;
+  color: rgba(255, 244, 216, 0.85);
+  line-height: 1.6;
+}
+
+/* ==============================================================================
+   9. 푸터
+   ============================================================================== */
+.site-footer {
+  background-color: #041E26;
+  padding: 2.5rem 0;
+  margin-top: auto;
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+
+.footer-text {
+  font-size: 0.85rem;
+  color: rgba(255, 244, 216, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: rgba(255, 244, 216, 0.4);
+}
+
+/* ==============================================================================
+   10. 반응형 미디어 쿼리 (360px ~ 768px 모바일 대응)
+   ============================================================================== */
+@media (max-width: 600px) {
+  .header-container {
+    justify-content: center;
+  }
+  
+  .panel-card {
+    padding: 1.4rem;
+  }
+
+  .form-meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+
+  .card-title {
+    font-size: 1.4rem;
+  }
+
+  .sentiment-badge {
+    font-size: 1.2rem;
+  }
+}
+
