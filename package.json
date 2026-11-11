@@ -5,6 +5,7 @@
   "main": "api/analyze.js",
   "type": "module",
   "scripts": {
+    "build": "echo 'No build step required for static site'",
     "start": "node server.js",
     "test": "node --test test/*.test.js"
   },
